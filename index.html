@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BonziWORLD Server Browser</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #1a1a2e;
+            color: #e2e8f0;
+        }
+        
+        /* Custom scrollbar for a sleeker look */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #16213e;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #4a5568;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #718096;
+        }
+    </style>
+</head>
+<body class="min-h-screen overflow-x-hidden flex items-center justify-center p-4">
+
+    <!-- Main Server List Container -->
+    <div id="list-container" class="max-w-3xl w-full bg-[#16213e] rounded-2xl shadow-2xl overflow-hidden border border-[#0f3460] transition-opacity duration-300">
+        
+        <!-- Header -->
+        <div class="bg-[#0f3460] p-6 text-center border-b border-[#e94560]">
+            <h1 class="text-3xl font-extrabold text-white tracking-wider flex items-center justify-center gap-3">
+                🦍 BonziWORLD Navigator
+            </h1>
+            <p class="text-gray-300 mt-2 text-sm font-medium">Select a server to enter the mainframe.</p>
+        </div>
+
+        <!-- Server List -->
+        <div class="p-6 space-y-4">
+            
+            <!-- Server 1 -->
+            <div class="bg-[#1a1a2e] border border-gray-700 rounded-xl p-5 flex flex-col sm:flex-row items-center justify-between gap-4 hover:border-[#e94560] transition-colors duration-200 shadow-lg">
+                <div class="text-center sm:text-left">
+                    <h2 class="text-xl font-bold text-white">izhangit's Server</h2>
+                    <p class="text-gray-400 text-sm font-mono mt-1">https://izhangit.qzz.io</p>
+                </div>
+                <button onclick="openServer('https://izhangit.qzz.io')" class="w-full sm:w-auto px-6 py-2.5 bg-gradient-to-r from-[#e94560] to-[#b8334a] hover:from-[#f05c75] hover:to-[#c9455d] text-white font-semibold rounded-lg shadow-md transform hover:scale-105 transition-all duration-200">
+                    Go In 🚀
+                </button>
+            </div>
+
+            <!-- Server 2 -->
+            <div class="bg-[#1a1a2e] border border-gray-700 rounded-xl p-5 flex flex-col sm:flex-row items-center justify-between gap-4 hover:border-[#e94560] transition-colors duration-200 shadow-lg">
+                <div class="text-center sm:text-left truncate w-full sm:w-2/3">
+                    <h2 class="text-xl font-bold text-white">Ivory's ReRas Emulated</h2>
+                    <p class="text-gray-400 text-sm font-mono mt-1 truncate">https://ivorydevrimoalt.github.io/BonziworldReRasEmulated</p>
+                </div>
+                <button onclick="openServer('https://ivorydevrimoalt.github.io/BonziworldReRasEmulated')" class="w-full sm:w-auto px-6 py-2.5 bg-gradient-to-r from-[#e94560] to-[#b8334a] hover:from-[#f05c75] hover:to-[#c9455d] text-white font-semibold rounded-lg shadow-md transform hover:scale-105 transition-all duration-200 shrink-0">
+                    Go In 🚀
+                </button>
+            </div>
+
+            <!-- Server 3 -->
+            <div class="bg-[#1a1a2e] border border-gray-700 rounded-xl p-5 flex flex-col sm:flex-row items-center justify-between gap-4 hover:border-[#e94560] transition-colors duration-200 shadow-lg">
+                <div class="text-center sm:text-left">
+                    <h2 class="text-xl font-bold text-white">Bonziworld KR</h2>
+                    <p class="text-gray-400 text-sm font-mono mt-1">https://bonziworld.kr</p>
+                </div>
+                <button onclick="openServer('https://bonziworld.kr')" class="w-full sm:w-auto px-6 py-2.5 bg-gradient-to-r from-[#e94560] to-[#b8334a] hover:from-[#f05c75] hover:to-[#c9455d] text-white font-semibold rounded-lg shadow-md transform hover:scale-105 transition-all duration-200">
+                    Go In 🚀
+                </button>
+            </div>
+
+        </div>
+        
+        <div class="bg-[#131d30] p-4 text-center text-xs text-gray-500">
+            Note: Some servers might have frame protection. If a page refuses to connect, it's due to their security settings.
+        </div>
+    </div>
+
+    <!-- Fullscreen Iframe Container (Hidden by default) -->
+    <div id="iframe-container" class="hidden fixed inset-0 w-full h-full z-50 bg-black">
+        
+        <!-- Overlay Close Button -->
+        <button onclick="closeServer()" class="absolute top-4 right-4 z-[60] bg-gray-900/80 hover:bg-red-600 text-white p-3 rounded-full shadow-xl backdrop-blur-sm transition-colors duration-200 flex items-center justify-center group" title="Leave Server">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 transform group-hover:rotate-90 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+        </button>
+
+        <!-- The Iframe -->
+        <iframe id="server-frame" src="" class="w-full h-full border-none shadow-none m-0 p-0 absolute inset-0 bg-white" allow="fullscreen; autoplay; clipboard-write"></iframe>
+    </div>
+
+    <script>
+        const listContainer = document.getElementById('list-container');
+        const iframeContainer = document.getElementById('iframe-container');
+        const serverFrame = document.getElementById('server-frame');
+
+        // Function to open the iframe with the selected URL
+        function openServer(url) {
+            // Set the iframe source
+            serverFrame.src = url;
+            
+            // Hide the list and show the iframe container
+            listContainer.classList.add('hidden');
+            iframeContainer.classList.remove('hidden');
+            
+            // Optional: Hide the main body overflow to prevent background scrolling
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Function to close the iframe and return to the list
+        function closeServer() {
+            // Clear the iframe source to stop video/audio playing in background
+            serverFrame.src = '';
+            
+            // Hide the iframe container and show the list
+            iframeContainer.classList.add('hidden');
+            listContainer.classList.remove('hidden');
+            
+            // Restore body overflow
+            document.body.style.overflow = '';
+        }
+    </script>
+</body>
+</html>
